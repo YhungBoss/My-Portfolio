@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Ayodeji's Portfolio</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #22223b;
+            --accent: #4ea8de;
+            --bg: #f8f9fa;
+            --card: #fff;
+            --text: #22223b;
+            --muted: #6c757d;
+            --radius: 18px;
+            --shadow: 0 4px 24px rgba(34,34,59,0.08);
+            --transition: 0.3s cubic-bezier(.4,0,.2,1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            scroll-behavior: smooth;
+            min-height: 100%;
+        }
+        body.fade-in {
+            animation: fadeIn 1.2s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        /* Navbar */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--card);
+            box-shadow: 0 2px 8px rgba(34,34,59,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 2rem;
+            transition: background var(--transition);
+        }
+        .nav-logo {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            position: relative;
+            padding: 0.2rem 0;
+            transition: color var(--transition);
+        }
+        .nav-links a::after {
+            content: '';
+            display: block;
+            height: 2px;
+            width: 0;
+            background: var(--accent);
+            transition: width var(--transition);
+            position: absolute;
+            left: 0; bottom: -2px;
+            border-radius: 2px;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent);
+        }
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+        /* Hamburger for mobile */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        .nav-toggle span {
+            width: 24px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: all var(--transition);
+        }
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            padding: 4rem 1rem 2rem 1rem;
+            background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero .profile-pic {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--card);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            background: #fff;
+            animation: fadeInUp 1s 0.2s both;
+        }
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            letter-spacing: 1px;
+            animation: fadeInUp 1s 0.4s both;
+        }
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s 0.6s both;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        /* Parallax effect */
+        .parallax {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png');
+            opacity: 0.07;
+            animation: parallaxMove 10s linear infinite alternate;
+        }
+        @keyframes parallaxMove {
+            from { background-position: 0 0; }
+            to { background-position: 100px 60px; }
+        }
+        /* Projects Section */
+        .section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 2rem;
+        }
+        .project-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            transition: transform var(--transition), box-shadow var(--transition);
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1s forwards;
+        }
+        .project-card:nth-child(1) { animation-delay: 0.1s; }
+        .project-card:nth-child(2) { animation-delay: 0.2s; }
+        .project-card:nth-child(3) { animation-delay: 0.3s; }
+        .project-card img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 12px rgba(34,34,59,0.06);
+            object-fit: cover;
+            height: 160px;
+            background: #e9ecef;
+        }
+        .project-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        .project-card p {
+            color: var(--muted);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .project-card a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3em;
+        }
+        .project-card a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        .project-card:hover {
+            transform: translateY(-8px) scale(1.025);
+            box-shadow: 0 8px 32px rgba(34,34,59,0.13);
+        }
+        /* About Section */
+        .about-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2.5rem;
+            padding: 3rem 1rem;
+            background: linear-gradient(120deg, #f8fafc 0%, #e0eafc 100%);
+        }
+        .about-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        .about-profile img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 6px solid var(--card);
+            box-shadow: var(--shadow);
+            background: #fff;
+        }
+        .about-profile p {
+            max-width: 600px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 1.1rem;
+        }
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .skill-bubble {
+            background: var(--card);
+            color: var(--primary);
+            border-radius: 2rem;
+            padding: 0.7rem 1.5rem;
+            font-weight: 500;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(34,34,59,0.07);
+            margin: 0.2rem;
+            transition: background var(--transition), color var(--transition), box-shadow var(--transition);
+            cursor: default;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+        .skill-bubble:hover {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(78,168,222,0.13);
+        }
+        .gallery {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .gallery img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(34,34,59,0.09);
+            background: #e9ecef;
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+        .gallery img:hover {
+            transform: scale(1.07) rotate(-2deg);
+            box-shadow: 0 6px 24px rgba(34,34,59,0.13);
+        }
+        /* Contact Section */
+        .contact-section {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .contact-cta {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        .contact-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s 0.2s both;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1.5px solid #e0eafc;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #f8fafc;
+            color: var(--primary);
+            outline: none;
+            transition: border-color var(--transition), box-shadow var(--transition);
+            font-family: inherit;
+            resize: none;
+        }
+        .contact-form input:focus, .contact-form textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 2px 12px rgba(78,168,222,0.09);
+        }
+        .contact-form button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.9rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background var(--transition), box-shadow var(--transition);
+            box-shadow: 0 2px 8px rgba(78,168,222,0.09);
+            margin-top: 0.5rem;
+        }
+        .contact-form button:hover {
+            background: var(--primary);
+            box-shadow: 0 4px 16px rgba(34,34,59,0.13);
+        }
+        .socials {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #f8fafc;
+            color: var(--primary);
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(34,34,59,0.07);
+            transition: background var(--transition), color var(--transition), box-shadow var(--transition), transform var(--transition);
+            text-decoration: none;
+        }
+        .social-link:hover {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(78,168,222,0.13);
+            transform: translateY(-3px) scale(1.08);
+        }
+        /* Responsive */
+        @media (max-width: 900px) {
+            .section, .about-section, .contact-section { padding: 2rem 1rem; }
+            .projects-grid { gap: 1.2rem; }
+        }
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 2rem; }
+            .section-title { font-size: 1.4rem; }
+            .about-profile img { width: 120px; height: 120px; }
+            .gallery img { width: 70px; height: 70px; }
+        }
+        @media (max-width: 600px) {
+            nav { padding: 0.5rem 1rem; }
+            .nav-links {
+                position: absolute;
+                top: 60px;
+                right: 1rem;
+                background: var(--card);
+                flex-direction: column;
+                gap: 1.2rem;
+                padding: 1.2rem 1.5rem;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                display: none;
+            }
+            .nav-links.open { display: flex; }
+            .nav-toggle { display: flex; }
+        }
+
+        .gallery {
+    display: flex;
+    gap: 20px;
+    padding: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    background: #f9f9f9;
+}
+
+.gallery video {
+    width: 300px;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery video:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+
+    </style>
+</head>
+<body class="fade-in">
+    <nav>
+        <div class="nav-logo">Ayodeji</div>
+        <div class="nav-links" id="navLinks">
+            <a href="#home" class="active">Home</a>
+            <a href="#about">About Me</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="nav-toggle" id="navToggle" aria-label="Open navigation" tabindex="0">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- Home / Hero -->
+    <section class="hero" id="home">
+        <div class="parallax"></div>
+        <img src="../Portfolio/profile.jpg" alt="Profile" class="profile-pic" />
+        <h1>Ayodeji Ositunga</h1>
+        <p>Front-End Developer &amp; Software engineer</p>
+    </section>
+
+    <!-- Projects -->
+    <section class="section" id="projects">
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <img src="../Portfolio/project1.jpg" alt="Project 1 Screenshot">
+                <h3>My Portfolio</h3>
+                <p>A sleek, responsive portfolio template built with HTML, CSS, and JS.</p>
+                <a href="" target="_blank" rel="noopener">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" style="vertical-align:middle;"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.084-.729.084-.729 1.205.084 1.84 1.236 1.84 1.236 1.07 1.834 2.809 1.304 3.495.997.108-.775.418-1.305.762-1.605-2.665-.305-5.466-1.334-5.466-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.553 3.297-1.23 3.297-1.23.653 1.653.242 2.873.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.803 5.624-5.475 5.921.43.371.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+                    GitHub
+                </a>
+            </div>
+            <div class="project-card">
+                <img src="../Portfolio/project2.jpg" alt="Project 2 Screenshot">
+                <h3>BU eats</h3>
+                <p>Student based food ordering system.</p>
+                <a href="https://github.com/YhungBoss/BUeats" target="_blank" rel="noopener">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" style="vertical-align:middle;"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.084-.729.084-.729 1.205.084 1.84 1.236 1.84 1.236 1.07 1.834 2.809 1.304 3.495.997.108-.775.418-1.305.762-1.605-2.665-.305-5.466-1.334-5.466-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.553 3.297-1.23 3.297-1.23.653 1.653.242 2.873.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.803 5.624-5.475 5.921.43.371.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+                    GitHub
+                </a>
+            </div>
+            <div class="project-card">
+                <img src="../Portfolio/project3.jpg" alt="Project 3 Screenshot">
+                <h3>More to come</h3>
+                <p>I have plans for more projects coming soon.</p>
+                <a href="" target="_blank" rel="noopener">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" style="vertical-align:middle;"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.084-.729.084-.729 1.205.084 1.84 1.236 1.84 1.236 1.07 1.834 2.809 1.304 3.495.997.108-.775.418-1.305.762-1.605-2.665-.305-5.466-1.334-5.466-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.553 3.297-1.23 3.297-1.23.653 1.653.242 2.873.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.803 5.624-5.475 5.921.43.371.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me -->
+    <section class="about-section" id="about">
+        <div class="about-profile">
+            <img src="Portfolio/profile.jpg" alt="Ayode Profile Large">
+            <p>
+                Hi, I'm Ayodeji Ositunga, a passionate front-end developer who loves crafting beautiful, accessible, and performant web experiences. With a keen eye for design and a drive for clean code, I enjoy turning ideas into delightful digital products. When I'm not coding, you'll find me exploring new tech, gaming, or just chilling
+        </div>
+        <div>
+            <h2 class="section-title" style="margin-bottom:1.2rem;">Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-bubble"><span>🌐</span>HTML5</div>
+                <div class="skill-bubble"><span>🎨</span>CSS3</div>
+                <div class="skill-bubble"><span>⚡</span>JavaScript</div>
+                <div class="skill-bubble"><span>📱</span>Mobile app development</div>
+                <div class="skill-bubble"><span>🔧</span>Git</div>
+            </div>
+        </div>
+        <div class="gallery">
+            <h2 class="section-title" style="margin-bottom:1.2rem;">Gallery</h2>
+            <div class="gallery">
+                <video src="../Portfolio/video1.mp4" autoplay muted loop playsinline></video>
+                <video src="../Portfolio/video2.mp4" autoplay muted loop playsinline></video>
+                <video src="../Portfolio/video3.mp4" autoplay muted loop playsinline></video>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact-section" id="contact">
+        <div class="contact-cta">
+            <q>Let's build something great together. Reach out and say hi!</q>
+        </div>
+        <form class="contact-form" id="contactForm" autocomplete="off">
+            <input type="text" name="name" placeholder="Your Name" required autocomplete="off">
+            <input type="email" name="email" placeholder="Your Email" required autocomplete="off">
+            <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+        <div class="socials">
+            <a href="https://github.com/YhungBoss" class="social-link" target="_blank" rel="noopener" aria-label="GitHub">
+                <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.084-.729.084-.729 1.205.084 1.84 1.236 1.84 1.236 1.07 1.834 2.809 1.304 3.495.997.108-.775.418-1.305.762-1.605-2.665-.305-5.466-1.334-5.466-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.553 3.297-1.23 3.297-1.23.653 1.653.242 2.873.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.803 5.624-5.475 5.921.43.371.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+            </a>
+            <a href="" class="social-link" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.838-1.563 3.034 0 3.595 1.997 3.595 4.59v5.606z"/></svg>
+            </a>
+            <a href="mailto:ayodeji.ositunga@gmail.com" class="social-link" aria-label="Email">
+                <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12 13.065l-11.99-8.065h23.98l-11.99 8.065zm-12-7.065v14h24v-14l-12 8.065-12-8.065z"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <script>
+        // Navbar active link and smooth scroll
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href').replace('#','');
+                const section = document.getElementById(targetId);
+                if (section) {
+                    e.preventDefault();
+                    section.scrollIntoView({ behavior: 'smooth' });
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    // Close nav on mobile
+                    document.getElementById('navLinks').classList.remove('open');
+                }
+            });
+        });
+
+        // Hamburger menu
+        const navToggle = document.getElementById('navToggle');
+        navToggle.addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('open');
+        });
+        navToggle.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                document.getElementById('navLinks').classList.toggle('open');
+            }
+        });
+
+        // Animate project cards on scroll
+        function animateOnScroll() {
+            const cards = document.querySelectorAll('.project-card');
+            const trigger = window.innerHeight * 0.92;
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < trigger) {
+                    card.style.opacity = 1;
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        }
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+
+        // Contact form fake submit
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.reset();
+            this.querySelector('button').textContent = 'Sent!';
+            setTimeout(() => {
+                this.querySelector('button').textContent = 'Send Message';
+            }, 1800);
+        });
+
+        // Parallax effect for hero
+        document.querySelector('.hero').addEventListener('mousemove', function(e) {
+            const parallax = this.querySelector('.parallax');
+            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+            parallax.style.backgroundPosition = `${50 + x}px ${50 + y}px`;
+        });
+    </script>
+</body>
+</html>
